@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+  mysql-service:
+    image: mysql:8.1.0
+    restart: unless-stopped
+    environment:
+     - MYSQL_ROOT_PASSWORD=Apple@27
+     - MYSQL_DATABASE=mydb
+     - MYSQL_HOST=mysql-service
+    ports:
+     - 3307:3306
+    networks :
+     mysql-net:
+
+      
+  todoapp:
+    depends_on :
+     - mysql-service
+    build : ./TodoRestAPI
+    ports:
+     - 8000:8080
+    environment:
+      # note the change in the following line
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/mydb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+     
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+    networks :
+     mysql-net:
+
+networks:
+  mysql-net:
