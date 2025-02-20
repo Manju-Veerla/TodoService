@@ -4,7 +4,7 @@ Spring boot rest api application to Fetch , Create , Update, Delete Todo details
 ## Requirements
 java 17 <br>
 Maven 3 <br>
-Springboot 3.1.4
+Springboot 3.4.2
 
 ## Running the application locally
 To run the application :
@@ -24,7 +24,7 @@ To create a jar file for deploying the application : Run the command mvn clean i
 http://localhost:8080/swagger-ui/index.html#
 
 ##Postman Collection
-LeanX.postman_collection.json is available in path TodoRestAPI\src\main\resources\.postman
+postman_collection.json is available in path TodoRestAPI\src\main\resources\.postman
 
 
 
