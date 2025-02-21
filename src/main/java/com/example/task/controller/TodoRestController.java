@@ -2,8 +2,8 @@ package com.example.task.controller;
 
 import java.util.List;
 
+import com.example.task.model.entities.SubTask;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.task.dto.TodoDto;
-import com.example.task.entities.Todo;
+import com.example.task.model.request.TodoRequest;
+import com.example.task.model.entities.Todo;
 import com.example.task.exception.TodoNotFoundException;
-import com.example.task.response.TodoResponse;
+import com.example.task.model.response.TodoResponse;
 import com.example.task.service.TodoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +36,7 @@ import jakarta.validation.Valid;
 @RequiredArgsConstructor
 public class TodoRestController {
 
+
 private final	TodoService todoService;
 
 	@Operation(summary = "Gets the list of todos")
@@ -43,7 +44,7 @@ private final	TodoService todoService;
 	        @ApiResponse(responseCode = "200", description = "Fetched Todo List",
 	        content = {@Content(mediaType = "application/json",schema = @Schema(implementation = Todo.class))})})
 	@GetMapping(value="/todos",produces = "application/json")
-	public List<Todo> getTodos(){
+	public List<TodoResponse> getTodos(){
 		return todoService.getAllTodos();
 	}
 
@@ -54,25 +55,21 @@ private final	TodoService todoService;
 	        @ApiResponse(responseCode = "400",description = "Todo not found",content = @Content)})
 	@GetMapping(value="/todos/{id}",produces = "application/json")
 	public ResponseEntity <?> getTodo(@PathVariable("id") long id) {
-		TodoResponse todoResponse;
-		try {
-			todoResponse = todoService.getTodo(id);
-			return ResponseEntity.status(HttpStatus.OK).body(todoResponse);
-		} catch (TodoNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo doesn't exist");
-		}
+		TodoResponse todoResponse = todoService.getTodo(id);
+		return ResponseEntity.status(HttpStatus.OK).body(todoResponse);
 
 	}
 
-	@GetMapping(value="/todos/{id}/subtask",produces = "application/json")
+  @Operation(summary = "Get an subtask by task id and sub task name")
+  @ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Get an subtask",
+      content = {@Content(mediaType = "application/json",schema = @Schema(implementation = SubTask.class))}),
+    @ApiResponse(responseCode = "400",description = "Subtask not found",content = @Content)})
+  @GetMapping(value="/todos/{id}/subtask",produces = "application/json")
 	public ResponseEntity<?> getSubtask(@PathVariable("id") long id ,@RequestParam String name) {
-		try {
 			List subtasks = todoService.getSubtask(id,name);
 			return ResponseEntity.status(HttpStatus.OK).body(subtasks);
-		} catch (TodoNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo doesn't exist");
-		}
-	}
+  }
 
 
 	@Operation(summary = "create an todo ")
@@ -81,7 +78,7 @@ private final	TodoService todoService;
 	content = {@Content(mediaType = "application/json",schema = @Schema(implementation = Todo.class))}),
 	        @ApiResponse(responseCode = "404",description = "Todo not created",content = @Content)})
 	@PostMapping(value="/todos",consumes = "application/json", produces = "application/json")
-	public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoDto todo){
+	public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoRequest todo){
 		TodoResponse todoResponse = todoService.createTodo(todo);
 		if(null != todoResponse) {
 			return ResponseEntity.status(HttpStatus.CREATED).body(todoResponse);
@@ -97,13 +94,9 @@ private final	TodoService todoService;
 	        @ApiResponse(responseCode = "400",description = "Todo not found",content = @Content)})
 	@PutMapping(value="/todos/{id}",consumes = "application/json", produces = "application/json")
 	public ResponseEntity <?> updateTodo(@PathVariable("id") long id ,
-			 @RequestBody TodoDto todoDetails) {
-		try {
+			 @RequestBody TodoRequest todoDetails) {
 			TodoResponse updatedTodo = todoService.updateTodo(id, todoDetails);
 			return ResponseEntity.status(HttpStatus.OK).body(updatedTodo);
-		} catch (TodoNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Todo doesn't exist");
-		}
 	}
 
 	@Operation(summary = "Delete an todo by its id")
@@ -120,6 +113,4 @@ private final	TodoService todoService;
 			return "Todo doesn't exist";
 		}
 	}
-
-
 }

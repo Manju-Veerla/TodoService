@@ -5,28 +5,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import com.example.task.dto.SubTaskDto;
+import com.example.task.model.request.SubTaskRequest;
+import com.example.task.model.request.TodoRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.internal.util.collections.ArrayHelper;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import com.example.task.dto.TodoDto;
-import com.example.task.entities.SubTask;
-import com.example.task.entities.Todo;
+import com.example.task.model.entities.SubTask;
+import com.example.task.model.entities.Todo;
 import com.example.task.exception.TodoNotFoundException;
 import com.example.task.repo.SubtaskRepository;
 import com.example.task.repo.TodoRepository;
-import com.example.task.response.TodoResponse;
-import com.example.task.service.TodoService;
-
+import com.example.task.model.response.TodoResponse;
 
 
 @Service
@@ -45,14 +41,14 @@ public class TodoServiceImpl implements TodoService {
 	 * Method to get all the todos from the repository
 	 * @return list of Todos
 	 */
-	public List<Todo> getAllTodos(){
+	public List<TodoResponse> getAllTodos(){
 		LOGGER.info("Getting todos from repository ");
 		List<Todo> list = todoRepo.findAll();
-		/*
-		 * List<TodoResponse> returnList = new ArrayList(); list.forEach(todo ->
-		 * returnList.add( mapper.map(todo, TodoResponse.class)));
-		 */
-		return list;
+		List<TodoResponse> returnList = new ArrayList();
+    list.forEach(
+      todo -> returnList.add( mapper.map(todo, TodoResponse.class)));
+
+		return returnList;
 	}
 
 	/**
@@ -61,7 +57,7 @@ public class TodoServiceImpl implements TodoService {
 	 * @return The Todo details fetched
 	 * @throws TodoNotFoundException
 	 */
-	public TodoResponse getTodo(long id) throws TodoNotFoundException {
+	public TodoResponse getTodo(long id) {
 		LOGGER.info("Finding todo by id "+ id);
 		Optional<Todo> todo = todoRepo.findById(id);
 		if (!todo.isEmpty()) {
@@ -79,7 +75,7 @@ public class TodoServiceImpl implements TodoService {
 	 * @return The Todo details created
 	 */
 	@Transactional
-	public TodoResponse createTodo(@RequestBody TodoDto todo){
+	public TodoResponse createTodo(@RequestBody @Valid TodoRequest todo){
 		LOGGER.info("Creating todo ");
 		Todo todoCreated = todoRepo.save(mapper.map(todo, Todo.class));
 		TodoResponse todoResponse = mapper.map(todoCreated, TodoResponse.class);
@@ -94,7 +90,7 @@ public class TodoServiceImpl implements TodoService {
 	 * @throws TodoNotFoundException
 	 */
 	@Transactional
-	public TodoResponse updateTodo(long id , TodoDto todoDetails) throws TodoNotFoundException{
+	public TodoResponse updateTodo(long id , TodoRequest todoDetails) {
 		LOGGER.info("updating todo by id "+ id);
 		Todo todo;
 		TodoResponse updatedTodo = null ;
@@ -109,8 +105,8 @@ public class TodoServiceImpl implements TodoService {
           if(CollectionUtils.isNotEmpty(todoDetails.getTasks())) {
           LOGGER.info("updating todo task by id "+ id);
           Set<SubTask> tasks = todo.getTasks();
-          Set<SubTaskDto> taskDtos = todoDetails.getTasks();
-          for(SubTaskDto task :taskDtos) {
+          Set<SubTaskRequest> taskDtos = todoDetails.getTasks();
+          for(SubTaskRequest task :taskDtos) {
              tasks.add(mapper.map(task, SubTask.class) );
           }
           todo.setTasks(tasks);
@@ -128,7 +124,7 @@ public class TodoServiceImpl implements TodoService {
 	 * @throws TodoNotFoundException
 	 */
 	@Transactional
-	public void deleteTodo(long id) throws TodoNotFoundException{
+	public void deleteTodo(long id) {
 		LOGGER.info("Deleting todo by id "+ id);
 		Todo todo = todoRepo.findById(id)
 				.orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
@@ -140,7 +136,7 @@ public class TodoServiceImpl implements TodoService {
 	}
 
 	@Override
-	public List<?> getSubtask(long id, String name) throws TodoNotFoundException {
+	public List<?> getSubtask(long id, String name)  {
 		Todo todo = todoRepo.findById(id)
 				.orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
 		 List subtasks = subtaskRepo.findBySubtaskName(id,name);

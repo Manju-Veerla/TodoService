@@ -1,23 +1,21 @@
 package com.example.task.service;
 
 import java.util.List;
-
+import com.example.task.model.request.TodoRequest;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
-
-import com.example.task.dto.TodoDto;
-import com.example.task.entities.Todo;
 import com.example.task.exception.TodoNotFoundException;
-import com.example.task.response.TodoResponse;
+import com.example.task.model.response.TodoResponse;
 
 
 
 public interface TodoService {
 
-	List<Todo> getAllTodos();
-	TodoResponse getTodo(long id) throws TodoNotFoundException ;
-	TodoResponse createTodo(@RequestBody TodoDto todo);
-	TodoResponse updateTodo(long id ,TodoDto todoDetails) throws TodoNotFoundException ;
-	void deleteTodo(long id) throws TodoNotFoundException ;
-	
-	List<?> getSubtask(long id, String name) throws TodoNotFoundException ;
+	List<TodoResponse> getAllTodos();
+	TodoResponse getTodo(long id) ;
+	TodoResponse createTodo(@RequestBody @Valid TodoRequest todo);
+	TodoResponse updateTodo(long id , TodoRequest todoDetails) ;
+	void deleteTodo(long id) ;
+
+	List<?> getSubtask(long id, String name) ;
 }

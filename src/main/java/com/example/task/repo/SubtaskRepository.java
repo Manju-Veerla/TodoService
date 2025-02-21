@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.example.task.entities.SubTask;
+import com.example.task.model.entities.SubTask;
 
 public interface SubtaskRepository extends JpaRepository<SubTask,Long>{
 

@@ -1,9 +1,7 @@
-package com.example.task.entities;
+package com.example.task.model.entities;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import com.example.task.dto.SubTaskDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

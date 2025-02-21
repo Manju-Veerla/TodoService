@@ -1,6 +1,5 @@
-package com.example.task.response;
+package com.example.task.model.response;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 public class SubTaskResponse {
 
 	private String name;
-
 	private String description;
 
 }

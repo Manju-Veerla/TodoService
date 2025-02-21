@@ -1,4 +1,4 @@
-package com.example.task.dto;
+package com.example.task.model.request;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,16 +8,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class TodoDto {
+public class TodoRequest {
 
-	private int id;
-	
 	@NotNull(message = "The name is required.")
 	private String name;
-	
+
 	private String description;
-	
+
 	@Valid
-	private Set<SubTaskDto> tasks = new HashSet<>();
+	private Set<SubTaskRequest> tasks = new HashSet<>();
 
 }
