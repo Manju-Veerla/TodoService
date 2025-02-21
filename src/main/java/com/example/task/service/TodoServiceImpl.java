@@ -2,7 +2,6 @@ package com.example.task.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import com.example.task.model.request.SubTaskRequest;
@@ -47,65 +46,55 @@ public class TodoServiceImpl implements TodoService {
 		List<TodoResponse> returnList = new ArrayList();
     list.forEach(
       todo -> returnList.add( mapper.map(todo, TodoResponse.class)));
-
 		return returnList;
 	}
 
 	/**
 	 * Method to fetch a todo from an id
 	 * @param id the todo id to fetch details
-	 * @return The Todo details fetched
-	 * @throws TodoNotFoundException
-	 */
+	 * @return The TodoResponse details fetched
+   */
 	public TodoResponse getTodo(long id) {
-		LOGGER.info("Finding todo by id "+ id);
-		Optional<Todo> todo = todoRepo.findById(id);
-		if (!todo.isEmpty()) {
-			TodoResponse todoResponse = mapper.map(todo, TodoResponse.class);
-			return todoResponse;
-		} else {
-			LOGGER.error("Todo not found by id "+ id );
-			throw new TodoNotFoundException("todo not found :: " + id);
-		}
+    LOGGER.info("Finding todo by id {}", id);
+		Todo todo = todoRepo.findById(id).orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
+    return mapper.map(todo, TodoResponse.class);
 	}
 
 	/**
 	 * Method to create a new Todo
-	 * @param todo the request details for todo creation
+	 * @param todoRequest the request details for todo creation
 	 * @return The Todo details created
 	 */
 	@Transactional
-	public TodoResponse createTodo(@RequestBody @Valid TodoRequest todo){
+	public TodoResponse createTodo(@RequestBody @Valid TodoRequest todoRequest){
 		LOGGER.info("Creating todo ");
-		Todo todoCreated = todoRepo.save(mapper.map(todo, Todo.class));
-		TodoResponse todoResponse = mapper.map(todoCreated, TodoResponse.class);
-		return todoResponse;
+		Todo todoCreated = todoRepo.save(mapper.map(todoRequest, Todo.class));
+    return mapper.map(todoCreated, TodoResponse.class);
 	}
 
 	/**
 	 * Method to check and update a todo
 	 * @param id the todo id to fetch details
-	 * @param todoDetails the request details for todo update
+	 * @param todoRequest the request details for todo update
 	 * @return The Todo details Updated
-	 * @throws TodoNotFoundException
-	 */
+   */
 	@Transactional
-	public TodoResponse updateTodo(long id , TodoRequest todoDetails) {
-		LOGGER.info("updating todo by id "+ id);
+	public TodoResponse updateTodo(long id , TodoRequest todoRequest) {
+    LOGGER.info("updating todo by id {}", id);
 		Todo todo;
 		TodoResponse updatedTodo = null ;
 			todo = todoRepo.findById(id)
 					.orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
-			 if(StringUtils.isNotEmpty(todoDetails.getName())) {
-			  todo.setName(todoDetails.getName());
+			 if(StringUtils.isNotEmpty(todoRequest.getName())) {
+			  todo.setName(todoRequest.getName());
        }
-			  if(StringUtils.isNotEmpty(todoDetails.getDescription())) {
-			  todo.setDescription(todoDetails.getDescription());
+			  if(StringUtils.isNotEmpty(todoRequest.getDescription())) {
+			  todo.setDescription(todoRequest.getDescription());
         }
-          if(CollectionUtils.isNotEmpty(todoDetails.getTasks())) {
+          if(CollectionUtils.isNotEmpty(todoRequest.getTasks())) {
           LOGGER.info("updating todo task by id "+ id);
           Set<SubTask> tasks = todo.getTasks();
-          Set<SubTaskRequest> taskDtos = todoDetails.getTasks();
+          Set<SubTaskRequest> taskDtos = todoRequest.getTasks();
           for(SubTaskRequest task :taskDtos) {
              tasks.add(mapper.map(task, SubTask.class) );
           }
@@ -121,19 +110,14 @@ public class TodoServiceImpl implements TodoService {
 	/**
 	 *  Method to delete a todo
 	 * @param id the todo id to delete
-	 * @throws TodoNotFoundException
-	 */
+   */
 	@Transactional
 	public void deleteTodo(long id) {
-		LOGGER.info("Deleting todo by id "+ id);
-		Todo todo = todoRepo.findById(id)
+    LOGGER.info("Deleting todo by id {}", id);
+		todoRepo.findById(id)
 				.orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
-		if(null != todo) {
 			todoRepo.deleteById(id);
-		}
-
-
-	}
+  }
 
 	@Override
 	public List<?> getSubtask(long id, String name)  {
