@@ -56,7 +56,6 @@ public class TodoRestController {
   public ResponseEntity <?> getTodo(@PathVariable("id") long id) {
     TodoResponse todoResponse = todoService.getTodo(id);
     return ResponseEntity.status(HttpStatus.OK).body(todoResponse);
-
   }
 
   @Operation(summary = "Get an subtask by task id and sub task name")
@@ -77,8 +76,8 @@ public class TodoRestController {
       content = {@Content(mediaType = "application/json",schema = @Schema(implementation = Todo.class))}),
     @ApiResponse(responseCode = "404",description = "Todo not created",content = @Content)})
   @PostMapping(value="/todos",consumes = "application/json", produces = "application/json")
-  public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoRequest todo){
-    TodoResponse todoResponse = todoService.createTodo(todo);
+  public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoRequest todoRequest){
+    TodoResponse todoResponse = todoService.createTodo(todoRequest);
     if(null != todoResponse) {
       return ResponseEntity.status(HttpStatus.CREATED).body(todoResponse);
     } else {
@@ -93,8 +92,8 @@ public class TodoRestController {
     @ApiResponse(responseCode = "400",description = "Todo not found",content = @Content)})
   @PutMapping(value="/todos/{id}",consumes = "application/json", produces = "application/json")
   public ResponseEntity <?> updateTodo(@PathVariable("id") long id ,
-                                       @RequestBody TodoRequest todoDetails) {
-    TodoResponse updatedTodo = todoService.updateTodo(id, todoDetails);
+                                       @RequestBody TodoRequest todoRequest) {
+    TodoResponse updatedTodo = todoService.updateTodo(id, todoRequest);
     return ResponseEntity.status(HttpStatus.OK).body(updatedTodo);
   }
 

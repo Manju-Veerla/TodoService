@@ -37,4 +37,14 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(customError, HttpStatus.NOT_FOUND);
   }
 
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<Object> handleTodoNotFoundException(UserNotFoundException ex) {
+    LOGGER.error("UserNotFoundException ", ex);
+    ErrorResponse customError = ErrorResponse.builder()
+      .httpStatus(HttpStatus.NOT_FOUND)
+      .message(ex.getMessage())
+      .build();
+    return new ResponseEntity<>(customError, HttpStatus.NOT_FOUND);
+  }
+
 }

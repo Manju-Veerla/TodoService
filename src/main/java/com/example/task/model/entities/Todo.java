@@ -3,16 +3,8 @@ package com.example.task.model.entities;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,5 +29,14 @@ public class Todo {
 	@OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "task_id", referencedColumnName="id")
 	private Set<SubTask> tasks = new HashSet<>();
+
+  @ManyToMany(fetch = FetchType.LAZY,
+    cascade = {
+      CascadeType.PERSIST,
+      CascadeType.ALL
+    },
+    mappedBy = "todos")
+  @JsonIgnore
+  private Set<User> users = new HashSet<>();
 
 	}

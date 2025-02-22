@@ -102,9 +102,7 @@ public class TodoServiceImpl implements TodoService {
           LOGGER.info("updating todo by id "+ todo);
           }
         updatedTodo =  mapper.map(todoRepo.save(todo), TodoResponse.class) ;
-
-
-		return null;
+		return updatedTodo;
 	}
 
 	/**
