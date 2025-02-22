@@ -92,14 +92,14 @@ public class TodoServiceImpl implements TodoService {
 			  todo.setDescription(todoRequest.getDescription());
         }
           if(CollectionUtils.isNotEmpty(todoRequest.getTasks())) {
-          LOGGER.info("updating todo task by id "+ id);
+            LOGGER.info("updating todo task by id {}", id);
           Set<SubTask> tasks = todo.getTasks();
           Set<SubTaskRequest> taskDtos = todoRequest.getTasks();
           for(SubTaskRequest task :taskDtos) {
              tasks.add(mapper.map(task, SubTask.class) );
           }
           todo.setTasks(tasks);
-          LOGGER.info("updating todo by id "+ todo);
+            LOGGER.info("updating todo by id {}", todo);
           }
         updatedTodo =  mapper.map(todoRepo.save(todo), TodoResponse.class) ;
 		return updatedTodo;
@@ -118,16 +118,9 @@ public class TodoServiceImpl implements TodoService {
   }
 
 	@Override
-	public List<?> getSubtask(long id, String name)  {
+	public List<SubTask> getSubtask(long id, String name)  {
 		Todo todo = todoRepo.findById(id)
 				.orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
-		 List subtasks = subtaskRepo.findBySubtaskName(id,name);
-
-			/*
-			 * Set<SubTask> subtasks = todo.getTasks(); List resultTasks = new ArrayList();
-			 * for (SubTask subTask : subtasks) { if(subTask.getName().contains(name)) {
-			 * resultTasks.add(subTask); } }
-			 */
-		return subtasks;
+    return subtaskRepo.findBySubtaskName(id,name);
 	}
 }

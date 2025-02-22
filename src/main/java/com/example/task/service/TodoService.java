@@ -1,6 +1,8 @@
 package com.example.task.service;
 
 import java.util.List;
+
+import com.example.task.model.entities.SubTask;
 import com.example.task.model.request.TodoRequest;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,5 +17,5 @@ public interface TodoService {
 	TodoResponse createTodo(@RequestBody @Valid TodoRequest todoRequest);
 	TodoResponse updateTodo(long id , TodoRequest todoRequest) ;
 	void deleteTodo(long id) ;
-	List<?> getSubtask(long id, String name) ;
+	List<SubTask> getSubtask(long id, String name) ;
 }

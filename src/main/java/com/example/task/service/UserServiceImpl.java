@@ -89,14 +89,14 @@ public class UserServiceImpl implements UserService {
 			  user.setEmail(userRequest.getEmail());
         }
           if(CollectionUtils.isNotEmpty(userRequest.getTodos())) {
-          LOGGER.info("updating user todo by id "+ id);
+            LOGGER.info("updating user todo by id {}", id);
           Set<Todo> todos = user.getTodos();
           Set<TodoRequest> todoRequests = userRequest.getTodos();
           for(TodoRequest todo :todoRequests) {
             todos.add(mapper.map(todo, Todo.class) );
           }
           user.setTodos(todos);
-          LOGGER.info("updating user by id "+ user);
+            LOGGER.info("updating user by id {}", user);
           }
         updatedUser =  mapper.map(userRepo.save(user), UserResponse.class) ;
 		return updatedUser;
