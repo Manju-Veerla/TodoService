@@ -1,6 +1,8 @@
 package com.example.task.service;
 
 import com.example.task.exception.UserNotFoundException;
+import com.example.task.mapper.TodoMapper;
+import com.example.task.mapper.UserMapper;
 import com.example.task.model.entities.Todo;
 import com.example.task.model.entities.User;
 import com.example.task.model.request.TodoRequest;
@@ -11,7 +13,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 
 @Service
@@ -31,7 +33,10 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepo;
 
-  private final ModelMapper mapper;
+  private final UserMapper userMapper;
+
+  private final TodoMapper todoMapper;
+
 
 	/**
 	 * Method to get all the users from the repository
@@ -42,7 +47,8 @@ public class UserServiceImpl implements UserService {
 		List<User> list = userRepo.findAll();
 		List<UserResponse> returnList = new ArrayList();
     list.forEach(
-      user -> returnList.add( mapper.map(user, UserResponse.class)));
+      user -> returnList.add(userMapper.toUserResponse(user)));
+        //mapper.map(user, UserResponse.class)));
 		return returnList;
 	}
 
@@ -51,10 +57,10 @@ public class UserServiceImpl implements UserService {
 	 * @param id the user id to fetch details
 	 * @return The UserResponse details fetched
    */
-	public UserResponse getUser(long id) {
+	public UserResponse getUser(UUID id) {
     LOGGER.info("Finding user by id {}", id);
 		User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException("user not found :: " + id));
-    return mapper.map(user, UserResponse.class);
+    return userMapper.toUserResponse(user);
 	}
 
 	/**
@@ -65,8 +71,8 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public UserResponse createUser(@RequestBody @Valid UserRequest userRequest){
 		LOGGER.info("Creating User ");
-		User userCreated = userRepo.save(mapper.map(userRequest, User.class));
-    return mapper.map(userCreated, UserResponse.class);
+		User userCreated = userRepo.save(userMapper.toUser(userRequest));
+    return userMapper.toUserResponse(userCreated);
 	}
 
 	/**
@@ -76,7 +82,7 @@ public class UserServiceImpl implements UserService {
 	 * @return The User details Updated
    */
 	@Transactional
-	public UserResponse updateUser(long id , UserRequest userRequest) {
+	public UserResponse updateUser(UUID id , UserRequest userRequest) {
     LOGGER.info("updating user by id {}", id);
 		User user;
 		UserResponse updatedUser = null ;
@@ -93,12 +99,12 @@ public class UserServiceImpl implements UserService {
           Set<Todo> todos = user.getTodos();
           Set<TodoRequest> todoRequests = userRequest.getTodos();
           for(TodoRequest todo :todoRequests) {
-            todos.add(mapper.map(todo, Todo.class) );
+            todos.add(todoMapper.toTodoEntity(todo) );
           }
           user.setTodos(todos);
             LOGGER.info("updating user by id {}", user);
           }
-        updatedUser =  mapper.map(userRepo.save(user), UserResponse.class) ;
+        updatedUser =  userMapper.toUserResponse(userRepo.save(user)) ;
 		return updatedUser;
 	}
 
@@ -107,7 +113,7 @@ public class UserServiceImpl implements UserService {
 	 * @param id the user id to delete
    */
 	@Transactional
-	public void deleteUser(long id) {
+	public void deleteUser(UUID id) {
     LOGGER.info("Deleting user by id {}", id);
 		userRepo.findById(id)
 				.orElseThrow(() -> new UserNotFoundException("user not found :: " + id));

@@ -8,8 +8,6 @@ import lombok.Setter;
 @Setter
 public class SubTaskRequest {
 
-	private int id;
-
 	@NotNull(message = "The name is required.")
 	private String name;
 

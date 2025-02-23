@@ -25,6 +25,8 @@ import com.example.task.model.request.TodoRequest;
 import com.example.task.model.response.TodoResponse;
 import com.example.task.service.TodoService;
 
+import java.util.UUID;
+
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = TodoRestController.class)
 public class TodoRestControllerTestV1 {
@@ -49,7 +51,7 @@ public class TodoRestControllerTestV1 {
 		todoResponse.setDescription("Task todo one");
 
 		Mockito.when(
-				todoService.getTodo(Mockito.anyLong())).thenReturn(todoResponse);
+				todoService.getTodo(UUID.randomUUID())).thenReturn(todoResponse);
 
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
 				"/api/v1/todos/1").accept(

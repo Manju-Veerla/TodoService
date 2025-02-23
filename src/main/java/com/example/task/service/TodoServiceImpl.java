@@ -3,14 +3,16 @@ package com.example.task.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
+import com.example.task.mapper.SubTaskMapper;
+import com.example.task.mapper.TodoMapper;
 import com.example.task.model.request.SubTaskRequest;
 import com.example.task.model.request.TodoRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,9 +36,11 @@ public class TodoServiceImpl implements TodoService {
 
   private final	SubtaskRepository subtaskRepo;
 
-  private final ModelMapper mapper;
+  private final TodoMapper todoMapper;
 
-	/**
+  private final SubTaskMapper subTaskMapper;
+
+  	/**
 	 * Method to get all the todos from the repository
 	 * @return list of Todos
 	 */
@@ -45,7 +49,7 @@ public class TodoServiceImpl implements TodoService {
 		List<Todo> list = todoRepo.findAll();
 		List<TodoResponse> returnList = new ArrayList();
     list.forEach(
-      todo -> returnList.add( mapper.map(todo, TodoResponse.class)));
+      todo -> returnList.add( todoMapper.toTodoResponse(todo)));
 		return returnList;
 	}
 
@@ -54,10 +58,10 @@ public class TodoServiceImpl implements TodoService {
 	 * @param id the todo id to fetch details
 	 * @return The TodoResponse details fetched
    */
-	public TodoResponse getTodo(long id) {
+	public TodoResponse getTodo(UUID id) {
     LOGGER.info("Finding todo by id {}", id);
 		Todo todo = todoRepo.findById(id).orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
-    return mapper.map(todo, TodoResponse.class);
+    return todoMapper.toTodoResponse(todo);
 	}
 
 	/**
@@ -68,8 +72,8 @@ public class TodoServiceImpl implements TodoService {
 	@Transactional
 	public TodoResponse createTodo(@RequestBody @Valid TodoRequest todoRequest){
 		LOGGER.info("Creating todo ");
-		Todo todoCreated = todoRepo.save(mapper.map(todoRequest, Todo.class));
-    return mapper.map(todoCreated, TodoResponse.class);
+		Todo todoCreated = todoRepo.save(todoMapper.toTodoEntity(todoRequest));
+    return todoMapper.toTodoResponse(todoCreated);
 	}
 
 	/**
@@ -79,7 +83,7 @@ public class TodoServiceImpl implements TodoService {
 	 * @return The Todo details Updated
    */
 	@Transactional
-	public TodoResponse updateTodo(long id , TodoRequest todoRequest) {
+	public TodoResponse updateTodo(UUID id , TodoRequest todoRequest) {
     LOGGER.info("updating todo by id {}", id);
 		Todo todo;
 		TodoResponse updatedTodo = null ;
@@ -96,12 +100,12 @@ public class TodoServiceImpl implements TodoService {
           Set<SubTask> tasks = todo.getTasks();
           Set<SubTaskRequest> taskDtos = todoRequest.getTasks();
           for(SubTaskRequest task :taskDtos) {
-             tasks.add(mapper.map(task, SubTask.class) );
+             tasks.add(subTaskMapper.toSubTask(task) );
           }
           todo.setTasks(tasks);
             LOGGER.info("updating todo by id {}", todo);
           }
-        updatedTodo =  mapper.map(todoRepo.save(todo), TodoResponse.class) ;
+        updatedTodo =  todoMapper.toTodoResponse(todoRepo.save(todo)) ;
 		return updatedTodo;
 	}
 
@@ -110,7 +114,7 @@ public class TodoServiceImpl implements TodoService {
 	 * @param id the todo id to delete
    */
 	@Transactional
-	public void deleteTodo(long id) {
+	public void deleteTodo(UUID id) {
     LOGGER.info("Deleting todo by id {}", id);
 		todoRepo.findById(id)
 				.orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
@@ -118,7 +122,7 @@ public class TodoServiceImpl implements TodoService {
   }
 
 	@Override
-	public List<SubTask> getSubtask(long id, String name)  {
+	public List<SubTask> getSubtask(UUID id, String name)  {
 		Todo todo = todoRepo.findById(id)
 				.orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
     return subtaskRepo.findBySubtaskName(id,name);

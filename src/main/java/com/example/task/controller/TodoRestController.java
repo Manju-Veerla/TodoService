@@ -1,6 +1,7 @@
 package com.example.task.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.example.task.model.entities.SubTask;
 import lombok.RequiredArgsConstructor;
@@ -53,8 +54,8 @@ public class TodoRestController {
       content = {@Content(mediaType = "application/json",schema = @Schema(implementation = Todo.class))}),
     @ApiResponse(responseCode = "400",description = "Todo not found",content = @Content)})
   @GetMapping(value="/todos/{id}",produces = "application/json")
-  public ResponseEntity<TodoResponse> getTodo(@PathVariable("id") long id) {
-    TodoResponse todoResponse = todoService.getTodo(id);
+  public ResponseEntity<TodoResponse> getTodo(@PathVariable("id") String id) {
+    TodoResponse todoResponse = todoService.getTodo(UUID.fromString(id));
     return ResponseEntity.status(HttpStatus.OK).body(todoResponse);
   }
 
@@ -64,8 +65,8 @@ public class TodoRestController {
       content = {@Content(mediaType = "application/json",schema = @Schema(implementation = SubTask.class))}),
     @ApiResponse(responseCode = "400",description = "Subtask not found",content = @Content)})
   @GetMapping(value="/todos/{id}/subtask",produces = "application/json")
-  public ResponseEntity<?> getSubtask(@PathVariable("id") long id ,@RequestParam String name) {
-    List<SubTask> subtasks = todoService.getSubtask(id,name);
+  public ResponseEntity<?> getSubtask(@PathVariable("id") String id , @RequestParam String name) {
+    List<SubTask> subtasks = todoService.getSubtask(UUID.fromString(id),name);
     return ResponseEntity.status(HttpStatus.OK).body(subtasks);
   }
 
@@ -91,9 +92,9 @@ public class TodoRestController {
       content = {@Content(mediaType = "application/json",schema = @Schema(implementation = Todo.class))}),
     @ApiResponse(responseCode = "400",description = "Todo not found",content = @Content)})
   @PutMapping(value="/todos/{id}",consumes = "application/json", produces = "application/json")
-  public ResponseEntity<TodoResponse> updateTodo(@PathVariable("id") long id ,
+  public ResponseEntity<TodoResponse> updateTodo(@PathVariable("id") String id ,
                                        @RequestBody TodoRequest todoRequest) {
-    TodoResponse updatedTodo = todoService.updateTodo(id, todoRequest);
+    TodoResponse updatedTodo = todoService.updateTodo(UUID.fromString(id), todoRequest);
     return ResponseEntity.status(HttpStatus.OK).body(updatedTodo);
   }
 
@@ -103,8 +104,8 @@ public class TodoRestController {
       content = {@Content(mediaType = "application/json",schema = @Schema(implementation = Todo.class))}),
     @ApiResponse(responseCode = "404",description = "Todo not found",content = @Content)})
   @DeleteMapping(value="/todos/{id}")
-  public String deleteTodo(@PathVariable("id") long id) {
-    todoService.deleteTodo(id);
+  public String deleteTodo(@PathVariable("id") String id) {
+    todoService.deleteTodo(UUID.fromString(id));
     return "Todo successfully deleted " ;
   }
 }

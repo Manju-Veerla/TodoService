@@ -5,9 +5,10 @@ import com.example.task.model.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User,Long>{
+public interface UserRepository extends JpaRepository<User, UUID>{
 
-  List<User> findUsersByTodos_Id(long todo_id);
+  List<User> findUsersByTodos_Id(UUID todo_id);
 
 }

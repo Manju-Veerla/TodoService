@@ -1,6 +1,7 @@
 package com.example.task.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.example.task.model.entities.SubTask;
 import com.example.task.model.request.TodoRequest;
@@ -13,9 +14,9 @@ import com.example.task.model.response.TodoResponse;
 public interface TodoService {
 
 	List<TodoResponse> getAllTodos();
-	TodoResponse getTodo(long id) ;
+	TodoResponse getTodo(UUID id) ;
 	TodoResponse createTodo(@RequestBody @Valid TodoRequest todoRequest);
-	TodoResponse updateTodo(long id , TodoRequest todoRequest) ;
-	void deleteTodo(long id) ;
-	List<SubTask> getSubtask(long id, String name) ;
+	TodoResponse updateTodo(UUID id , TodoRequest todoRequest) ;
+	void deleteTodo(UUID id) ;
+	List<SubTask> getSubtask(UUID id, String name) ;
 }
