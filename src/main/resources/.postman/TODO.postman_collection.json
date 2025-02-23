@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "74e72467-f666-4134-8e53-6d3fbd14e70e",
+		"name": "TODO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15611576",
+		"_collection_link": "https://rest-practice-0784.postman.co/workspace/Rest-Practice-Workspace~6d285596-1d63-47d0-9baf-6850784717b3/collection/15611576-74e72467-f666-4134-8e53-6d3fbd14e70e?action=share&source=collection_link&creator=15611576"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/api/v1/todos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/v1/users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/v1/todos/5/subtask",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "name",
+						"value": "Subtask_1",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos/5/subtask?name=Subtask_1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos",
+						"5",
+						"subtask"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Subtask_1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/v1/updatetodos/",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"todo_6\",\r\n  \"description\": \"Task todo six\",\r\n  \"tasks\": [\r\n    {\r\n      \"name\": \"Subtask_1\",\r\n      \"description\": \"Subtask one for todo6\"\r\n    },\r\n     {\r\n      \"name\": \"Subtask_2\",\r\n      \"description\": \"Subtask two for todo6\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/v1/users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"USER_4\",\r\n  \"email\": \"Hash@val.com\",\r\n  \"todos\": [\r\n    {\r\n      \"name\": \"TODO_10\",\r\n      \"description\": \"TODO 10\",\r\n       \"tasks\": [\r\n    {\r\n      \"name\": \"Subtask_10\",\r\n      \"description\": \"Subtask 10\"\r\n    },\r\n     {\r\n      \"name\": \"Subtask_20\",\r\n      \"description\": \"Subtask 20\"\r\n    }\r\n  ]\r\n    },\r\n     {\r\n      \"name\": \"TODO_11\",\r\n      \"description\": \"TODO 11\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/v1/updatetodos/",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"todo_1 name\",\r\n    \"description\": \"Task todo one updated\"\r\n   }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/v1/todos/2",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/todos/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"todos",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/fileapi/v1/upload",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/manju/OneDrive/Pictures/Screenshots/Screenshot 2024-10-17 104853.png"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/fileapi/v1/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"fileapi",
+						"v1",
+						"upload"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/fileapi/v1/download/Screenshot 2024-10-17 104853.png",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/fileapi/v1/download/Screenshot 2024-10-17 104853.png",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"fileapi",
+						"v1",
+						"download",
+						"Screenshot 2024-10-17 104853.png"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
