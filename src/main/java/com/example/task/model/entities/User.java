@@ -29,7 +29,7 @@ public class User {
   @ManyToMany(fetch = FetchType.LAZY,
     cascade = {
       CascadeType.PERSIST,
-      CascadeType.ALL
+      CascadeType.MERGE
     })
    @JoinTable(name = "user_todos",
     joinColumns = { @JoinColumn(name = "user_id") },

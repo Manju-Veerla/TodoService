@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.example.task.model.entities.SubTask;
+import com.example.task.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.task.model.request.TodoRequest;
 import com.example.task.model.entities.Todo;
 import com.example.task.model.response.TodoResponse;
-import com.example.task.service.TodoService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,7 +37,7 @@ import jakarta.validation.Valid;
 public class TodoRestController {
 
 
-  private final	TodoService todoService;
+  private final TodoService todoService;
 
   @Operation(summary = "Gets the list of todos")
   @ApiResponses(value = {

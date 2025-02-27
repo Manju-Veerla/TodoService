@@ -27,14 +27,14 @@ public class Todo {
 	@Column(name = "description")
 	private String description;
 
-	@OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany (cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, orphanRemoval=true)
 	@JoinColumn(name = "task_id", referencedColumnName="id")
 	private Set<SubTask> tasks = new HashSet<>();
 
   @ManyToMany(fetch = FetchType.LAZY,
     cascade = {
       CascadeType.PERSIST,
-      CascadeType.ALL
+      CascadeType.MERGE
     },
     mappedBy = "todos")
   @JsonIgnore

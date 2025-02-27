@@ -3,6 +3,7 @@ package com.example.task;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.example.task.model.request.TodoRequest;
+import com.example.task.service.TodoService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -23,7 +24,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.example.task.controller.TodoRestController;
 
 import com.example.task.model.response.TodoResponse;
-import com.example.task.service.TodoService;
 
 import java.util.UUID;
 
@@ -35,7 +35,7 @@ public class TodoRestControllerTestV1 {
 	private MockMvc mockMvc;
 
 	@MockitoBean
-	TodoService todoService;
+  TodoService todoService;
 
 	TodoResponse todoResponse = new TodoResponse();
 
