@@ -6,7 +6,7 @@ import com.example.task.model.response.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring",config = UUIDMapperConfig.class)
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
   @Mapping(target = "name", source = "userName")

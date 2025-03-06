@@ -5,10 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.task.model.entities.Todo;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface TodoRepository extends JpaRepository<Todo, UUID>{
+public interface TodoRepository extends JpaRepository<Todo, Integer>{
 
-  List<Todo> findTodosByUsers_Id(UUID userid);
+  List<Todo> findTodosByUsers_Id(Integer userid);
 
 }

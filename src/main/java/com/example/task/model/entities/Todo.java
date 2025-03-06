@@ -2,8 +2,6 @@ package com.example.task.model.entities;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -17,8 +15,8 @@ import lombok.Setter;
 public class Todo {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.UUID)
-	private UUID id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer id;
 
 	@Column(name = "name")
 	@NotNull

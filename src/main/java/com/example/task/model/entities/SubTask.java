@@ -10,8 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "subtask")
 @Getter
@@ -19,8 +17,8 @@ import java.util.UUID;
 public class SubTask {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.UUID)
-	private UUID id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer id;
 
 
 	@Column(name = "name")

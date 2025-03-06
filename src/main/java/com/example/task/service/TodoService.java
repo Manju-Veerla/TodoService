@@ -3,8 +3,6 @@ package com.example.task.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
-
 import com.example.task.mapper.SubTaskMapper;
 import com.example.task.mapper.TodoMapper;
 import com.example.task.model.request.SubTaskRequest;
@@ -58,7 +56,7 @@ public class TodoService {
 	 * @param id the todo id to fetch details
 	 * @return The TodoResponse details fetched
    */
-	public TodoResponse getTodo(UUID id) {
+	public TodoResponse getTodo(Integer id) {
     LOGGER.info("Finding todo by id {}", id);
 		Todo todo = todoRepo.findById(id).orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
     return todoMapper.toTodoResponse(todo);
@@ -83,7 +81,7 @@ public class TodoService {
 	 * @return The Todo details Updated
    */
 	@Transactional
-	public TodoResponse updateTodo(UUID id , TodoRequest todoRequest) {
+	public TodoResponse updateTodo(Integer id , TodoRequest todoRequest) {
     LOGGER.info("updating todo by id {}", id);
 		Todo todo;
 		TodoResponse updatedTodo = null ;
@@ -100,7 +98,10 @@ public class TodoService {
           Set<SubTask> tasks = todo.getTasks();
           Set<SubTaskRequest> taskDtos = todoRequest.getTasks();
           for(SubTaskRequest task :taskDtos) {
-             tasks.add(subTaskMapper.toSubTask(task) );
+            SubTask subTask = subTaskMapper.toSubTask(task) ;
+             subtaskRepo.save(subTask);
+            tasks.add(subTask);
+
           }
           todo.setTasks(tasks);
             LOGGER.info("updating todo by id {}", todo);
@@ -114,14 +115,14 @@ public class TodoService {
 	 * @param id the todo id to delete
    */
 	@Transactional
-	public void deleteTodo(UUID id) {
+	public void deleteTodo(Integer id) {
     LOGGER.info("Deleting todo by id {}", id);
 		todoRepo.findById(id)
 				.orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
 			todoRepo.deleteById(id);
   }
 
-		public List<SubTask> getSubtask(UUID id, String name)  {
+		public List<SubTask> getSubtask(Integer id, String name)  {
 		Todo todo = todoRepo.findById(id)
 				.orElseThrow(() -> new TodoNotFoundException("todo not found :: " + id));
     return subtaskRepo.findBySubtaskName(id,name);

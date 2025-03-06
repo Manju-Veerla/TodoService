@@ -1,8 +1,6 @@
 package com.example.task.controller;
 
 import java.util.List;
-import java.util.UUID;
-
 import com.example.task.model.entities.SubTask;
 import com.example.task.service.TodoService;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.task.model.request.TodoRequest;
 import com.example.task.model.entities.Todo;
 import com.example.task.model.response.TodoResponse;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -55,7 +51,7 @@ public class TodoRestController {
     @ApiResponse(responseCode = "400",description = "Todo not found",content = @Content)})
   @GetMapping(value="/todos/{id}",produces = "application/json")
   public ResponseEntity<TodoResponse> getTodo(@PathVariable("id") String id) {
-    TodoResponse todoResponse = todoService.getTodo(UUID.fromString(id));
+    TodoResponse todoResponse = todoService.getTodo(Integer.parseInt(id));
     return ResponseEntity.status(HttpStatus.OK).body(todoResponse);
   }
 
@@ -66,7 +62,7 @@ public class TodoRestController {
     @ApiResponse(responseCode = "400",description = "Subtask not found",content = @Content)})
   @GetMapping(value="/todos/{id}/subtask",produces = "application/json")
   public ResponseEntity<?> getSubtask(@PathVariable("id") String id , @RequestParam String name) {
-    List<SubTask> subtasks = todoService.getSubtask(UUID.fromString(id),name);
+    List<SubTask> subtasks = todoService.getSubtask(Integer.parseInt(id),name);
     return ResponseEntity.status(HttpStatus.OK).body(subtasks);
   }
 
@@ -94,7 +90,7 @@ public class TodoRestController {
   @PutMapping(value="/todos/{id}",consumes = "application/json", produces = "application/json")
   public ResponseEntity<TodoResponse> updateTodo(@PathVariable("id") String id ,
                                        @RequestBody TodoRequest todoRequest) {
-    TodoResponse updatedTodo = todoService.updateTodo(UUID.fromString(id), todoRequest);
+    TodoResponse updatedTodo = todoService.updateTodo(Integer.parseInt(id), todoRequest);
     return ResponseEntity.status(HttpStatus.OK).body(updatedTodo);
   }
 
@@ -105,7 +101,7 @@ public class TodoRestController {
     @ApiResponse(responseCode = "404",description = "Todo not found",content = @Content)})
   @DeleteMapping(value="/todos/{id}")
   public String deleteTodo(@PathVariable("id") String id) {
-    todoService.deleteTodo(UUID.fromString(id));
+    todoService.deleteTodo(Integer.parseInt(id));
     return "Todo successfully deleted " ;
   }
 }

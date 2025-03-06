@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -26,7 +24,7 @@ public class UserController {
 
   @GetMapping(value="/users/{id}",produces = "application/json")
   public ResponseEntity<?> getUser(@PathVariable("id") String id) {
-    UserResponse userResponse = userService.getUser(UUID.fromString(id));
+    UserResponse userResponse = userService.getUser(Integer.parseInt(id));
     return ResponseEntity.status(HttpStatus.OK).body(userResponse);
   }
 
@@ -42,7 +40,7 @@ public class UserController {
 
   public ResponseEntity <?> updateUser(@PathVariable("id") String id ,
                                        @RequestBody UserRequest userRequest) {
-    UserResponse updatedUser = userService.updateUser(UUID.fromString(id), userRequest);
+    UserResponse updatedUser = userService.updateUser(Integer.parseInt(id), userRequest);
     return ResponseEntity.status(HttpStatus.OK).body( updatedUser);
   }
 

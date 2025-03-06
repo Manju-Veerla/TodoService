@@ -18,11 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 
 @Service
@@ -57,7 +55,7 @@ public class UserService {
 	 * @param id the user id to fetch details
 	 * @return The UserResponse details fetched
    */
-	public UserResponse getUser(UUID id) {
+	public UserResponse getUser(Integer id) {
     LOGGER.info("Finding user by id {}", id);
 		User user = userRepo.findById(id).orElseThrow(() -> new UserNotFoundException("user not found :: " + id));
     return userMapper.toUserResponse(user);
@@ -82,7 +80,7 @@ public class UserService {
 	 * @return The User details Updated
    */
 	@Transactional
-	public UserResponse updateUser(UUID id , UserRequest userRequest) {
+	public UserResponse updateUser(Integer id , UserRequest userRequest) {
     LOGGER.info("updating user by id {}", id);
 		User user;
 		UserResponse updatedUser = null ;
@@ -113,7 +111,7 @@ public class UserService {
 	 * @param id the user id to delete
    */
 	@Transactional
-	public void deleteUser(UUID id) {
+	public void deleteUser(Integer id) {
     LOGGER.info("Deleting user by id {}", id);
 		userRepo.findById(id)
 				.orElseThrow(() -> new UserNotFoundException("user not found :: " + id));

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/mydb
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/todo_db
     username: root
     password: Apple@27
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -19,5 +19,3 @@ springdoc :
  api-docs :
   path : /api-docs
 
-logging:
-    level: WARN

@@ -11,7 +11,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -20,12 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import com.example.task.controller.TodoRestController;
-
 import com.example.task.model.response.TodoResponse;
-
-import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(value = TodoRestController.class)
@@ -51,10 +46,10 @@ public class TodoRestControllerTestV1 {
 		todoResponse.setDescription("Task todo one");
 
 		Mockito.when(
-				todoService.getTodo(UUID.randomUUID())).thenReturn(todoResponse);
+				todoService.getTodo(Mockito.any(Integer.class))).thenReturn(todoResponse);
 
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
-				"/api/v1/todos/"+UUID.randomUUID()).accept(
+				"/api/v1/todos/"+ 1).accept(
 						MediaType.APPLICATION_JSON);
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
