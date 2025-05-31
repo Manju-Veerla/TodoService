@@ -1,30 +1,109 @@
-#TodoRestApi Application
-Spring boot rest api application to Fetch , Create , Update, Delete Todo details
+# Todo Service
 
-## Requirements
-java 17 <br>
-Maven 3 <br>
-Springboot 3.4.2
+A Spring Boot-based Todo list management service with MySQL database integration, containerized with Docker.
 
-## Running the application locally
-To run the application :
-first database connectivity changes to be done in application.properties file
+## Features
 
-Creation of database tables can be done using Hibernate or liquibase
+- Create, read, update, and delete todos
+- Subtasks support for each todo
+- RESTful API endpoints
+- Containerized with Docker and Docker Compose
+- Database migrations with Flyway
+- Health check endpoints
 
-Hibernate - Uncomment the spring.jpa.hibernate.ddl-auto=create in application.properties <br>
-Liquibase - Change spring.liquibase.enabled=false to spring.liquibase.enabled=true in application.properties
+## Prerequisites
 
-## Deploying the application in server
+- Docker and Docker Compose installed on your system
+- Java 17 or higher (for local development without Docker)
+- Maven (for local development without Docker)
 
-To create a jar file for deploying the application : Run the command mvn clean install
+## Getting Started
 
-## Rest API documentation 
+### Using Docker Compose (Recommended)
 
-http://localhost:8080/swagger-ui/index.html#
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd TodoService
+   ```
 
-##Postman Collection
-postman_collection.json is available in path TodoRestAPI\src\main\resources\.postman
+2. Start the services:
+   ```bash
+   docker-compose up --build
+   ```
 
+3. The application will be available at: http://localhost:8080
 
+### Without Docker
 
+1. Make sure you have MySQL running locally
+2. Update the database configuration in `src/main/resources/application.yaml`
+3. Build and run the application:
+   ```bash
+   mvn spring-boot:run
+   ```
+
+## API Endpoints
+
+- `GET /api/todos` - Get all todos
+- `POST /api/todos` - Create a new todo
+- `GET /api/todos/{id}` - Get a specific todo
+- `PUT /api/todos/{id}` - Update a todo
+- `DELETE /api/todos/{id}` - Delete a todo
+- `GET /actuator/health` - Application health check
+
+## Database
+
+The application uses MySQL 8.1.0 with the following default credentials:
+- Database: `todo_db`
+- Username: `admin`
+- Password: `admin`
+
+## Project Structure
+
+```
+TodoService/
+├── src/
+│   ├── main/
+│   │   ├── java/com/example/task/
+│   │   │   ├── controller/     # REST controllers
+│   │   │   ├── model/          # Entity and DTO classes
+│   │   │   ├── repository/     # Data access layer
+│   │   │   ├── service/        # Business logic
+│   │   │   └── TodoServiceApplication.java
+│   │   └── resources/
+│   │       ├── db/changelog/    # Database migrations
+│   │       └── application.yaml # Application configuration
+├── docker-compose.yml           # Docker Compose configuration
+├── Dockerfile                   # Application Dockerfile
+├── init.sql                    # Database initialization script
+└── pom.xml                     # Maven configuration
+```
+
+## Environment Variables
+
+The following environment variables can be configured:
+
+- `SPRING_DATASOURCE_URL`: JDBC URL for the database (default: jdbc:mysql://mysql-service:3306/todo_db)
+- `SPRING_DATASOURCE_USERNAME`: Database username (default: admin)
+- `SPRING_DATASOURCE_PASSWORD`: Database password (default: admin)
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Issues**:
+   - Make sure MySQL is running and accessible
+   - Check the database credentials in `docker-compose.yml` and `application.yaml`
+   - Run `docker-compose logs mysql-service` to check MySQL logs
+
+2. **Port Conflicts**:
+   - The application runs on port 8080 by default
+   - MySQL runs on port 3307 (mapped from container's 3306)
+
+3. **Build Issues**:
+   - Run `docker-compose build --no-cache` to rebuild the images without cache
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
