@@ -1,8 +1,8 @@
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
-xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-<changeSet id="100-1" author="manju">
+<changeSet id="100-1" author="admin">
       <createTable tableName="Todo">
          <column name="id" type="int" autoIncrement="true">
             <constraints primaryKey="true" nullable="false" primaryKeyName="PK_TODOS"/>
@@ -29,7 +29,7 @@ xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liqui
          </column>
       </createTable>
    </changeSet>
-   <changeSet id="100-2" author="manju"> 
+   <changeSet id="100-2" author="admin">
 	<addForeignKeyConstraint baseColumnNames="todo_id" baseTableName="subtask" constraintName="FK_todo_task"
                    referencedColumnNames="id" referencedTableName="todo" />
    </changeSet>

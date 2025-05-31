@@ -1,9 +1,10 @@
-FROM maven:3.8.5-openjdk-17
-WORKDIR /Todo-app
+FROM maven:3.8.5-openjdk-17 AS build
+WORKDIR /TodoService
 COPY . .
-RUN mvn clean install
-COPY target/todorestapi-0.0.1-SNAPSHOT.jar .
+RUN mvn clean package -DskipTests
 
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /TodoService/target/*.jar TodoService.jar
 EXPOSE 8080
-ENV JAVA_OPTS=""
-CMD ["java", "-jar", "todorestapi-0.0.1-SNAPSHOT"]
+ENTRYPOINT ["java", "-jar", "TodoService.jar"]
