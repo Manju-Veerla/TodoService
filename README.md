@@ -8,7 +8,7 @@ A Spring Boot-based Todo list management service with MySQL database integration
 - Subtasks support for each todo
 - RESTful API endpoints
 - Containerized with Docker and Docker Compose
-- Database migrations with Flyway
+- Database migrations with Liquibase
 - Health check endpoints
 
 ## Prerequisites
@@ -23,7 +23,7 @@ A Spring Boot-based Todo list management service with MySQL database integration
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Manju-Veerla/TodoService.git
    cd TodoService
    ```
 
