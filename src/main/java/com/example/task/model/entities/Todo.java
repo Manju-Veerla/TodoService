@@ -18,8 +18,7 @@ public class Todo {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name = "name")
-	@NotNull
+	@Column(name = "name", nullable = false, unique = true)
 	private String name;
 
 	@Column(name = "description")
