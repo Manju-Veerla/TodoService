@@ -1,51 +1,56 @@
 services:
+  todoservice:
+    image: todoservice:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/todo_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&connectionTimeZone=UTC&useLegacyDatetimeCode=false&enabledTLSProtocols=TLSv1.2&nullCatalogMeansCurrent=true
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+    depends_on:
+      mysql-service:
+        condition: service_healthy
+    networks:
+      - todoservicenetwork
+
   mysql-service:
+    container_name: mysql_service
     image: mysql:8.1.0
     restart: always
-    volumes:
-      - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: todo_db
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
       MYSQL_ROOT_HOST: '%'
+    command: [
+      '--default-authentication-plugin=mysql_native_password',
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci',
+      '--max_connections=200'
+    ]
     ports:
       - "3307:3306"
-    networks:
-      - todo-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uadmin", "-padmin"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
-  todoservice:
-    build: .
-    depends_on:
-      mysql-service:
-        condition: service_healthy
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/todo_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: admin
-      SPRING_DATASOURCE_PASSWORD: admin
     volumes:
-      - .m2:/root/.m2
-    networks:
-      - todo-network
+      - mysql_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-padmin"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    networks:
+      - todoservicenetwork
+
 
 networks:
-  todo-network:
+  todoservicenetwork:
     driver: bridge
-
 volumes:
   mysql_data:
+    name: todo_mysql_data
     driver: local
